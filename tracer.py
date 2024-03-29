@@ -54,6 +54,7 @@ def main():
     parser.add_argument("domain", action="store",
                         help="domain/IP to trace the route to")
     args = parser.parse_args()
+
     if args.hops <= 0 or args.wait <= 0:
         print("Invalid arguments")
     else:
