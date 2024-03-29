@@ -23,10 +23,11 @@ def trace(domain: str, hops: int, wait: int):
             if match_timeout:
                 tracer.terminate()
         if not ips:
-            print("Invalid domain")
+            print("Invalid domain/IP")
             return
         dest = ips.pop(0)
-        ips.append(dest)
+        if ips[-1] != dest:
+            ips.append(dest)
         tracer.wait()
     response = find_ips(ips)
     for item in response:
@@ -51,7 +52,7 @@ def main():
     parser.add_argument("--wait", action="store", type=int,
                         default=100, help="max wait timeout for each answer in ms")
     parser.add_argument("domain", action="store",
-                        help="domain to trace the route to")
+                        help="domain/IP to trace the route to")
     args = parser.parse_args()
     if args.hops <= 0 or args.wait <= 0:
         print("Invalid arguments")
