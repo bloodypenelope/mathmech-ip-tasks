@@ -22,7 +22,7 @@ def trace(domain: str, hops: int, wait: int):
                 ips.append(match_ip.group("IP"))
             if match_timeout:
                 tracer.terminate()
-        if not ips:
+        if len(ips) <= 1:
             print("Invalid domain/IP")
             return
         dest = ips.pop(0)
