@@ -8,7 +8,7 @@ import re
 DNS_ID = 23330
 DNS_PACKET = struct.pack('!HHHHHH', DNS_ID, 256, 1, 0, 0, 0) + \
     b'\x06google\x03com\x00\x00\x01\x00\x01'
-NTP_PACKET = struct.pack('!BBBBIIIQQQQ', 0b00100011, *([0]*10))
+NTP_PACKET = struct.pack('!BBBb11I', 0b00100011, *([0]*14))
 HTTP_PACKET = b'GET / HTTP/1.1\r\nHost: google.com\r\n\r\n'
 SMTP_PACKET = b'Mock message'
 POP3_PACKET = b'AUTH'
@@ -37,7 +37,7 @@ class PortScanner:
         self.open_udp_ports = []
 
     def check_protocol(self, packet: bytes):
-        """Checks the protocol that port is working on"""
+        """Checks the protocol of the packet"""
         if struct.pack('!H', DNS_ID) in packet:
             return 'dns'
         if packet.startswith(b'HTTP'):
@@ -135,10 +135,11 @@ def main():
 
     port_scanner = PortScanner(args.hostname, args.start, args.end)
     port_scanner.scan_ports()
+
     for port, protocol in port_scanner.open_tcp_ports:
-        print(f'TCP port {port} is open. (service: {protocol})')
+        print(f'TCP port {port} is open. (protocol: {protocol})')
     for port, protocol in port_scanner.open_udp_ports:
-        print(f'UDP port {port} is open. (service: {protocol})')
+        print(f'UDP port {port} is open. (protocol: {protocol})')
 
 
 if __name__ == '__main__':
