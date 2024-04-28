@@ -22,20 +22,23 @@ class SNTPProtocol(asyncio.DatagramProtocol):
 
     @override
     def datagram_received(self, data: bytes, addr: tuple) -> None:
-        print(f'Received SNTP packet from {addr}')
-        response = self.create_packet(data)
-        self.transport.sendto(response, addr)
+        try:
+            received_packet = self.packet_format.unpack(data)
+            print(f'Received SNTP packet from {addr}')
+            response = self.create_packet(received_packet)
+            self.transport.sendto(response, addr)
+        except struct.error:
+            print(f'Received invalid SNTP packet from {addr}')
 
-    def create_packet(self, data: bytes) -> bytes:
+    def create_packet(self, received_packet: tuple) -> bytes:
         """Creates SNTP packet
 
         Args:
-            data (bytes): Received packet
+            received_packet (tuple): Received packet
 
         Returns:
             bytes: Response packet
         """
-        received_packet = self.packet_format.unpack(data)
         response_packet = self.packet_format.pack(
             0b00100100, 1, 0, 0, 0, 0, 0, 0,
             received_packet[10], self.calculate_time(),
