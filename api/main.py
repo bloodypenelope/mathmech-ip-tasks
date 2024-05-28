@@ -35,7 +35,7 @@ class VKApi:
     def _make_request(self, request_endpoint: str) -> dict:
         endpoint = f"{self.api_endpoint}/{request_endpoint}&access_token={
             self.access_token}&v={self.version}"
-        response = requests.get(endpoint, timeout=1000)
+        response = requests.get(endpoint, timeout=1)
         data = response.json()
         return data
 
