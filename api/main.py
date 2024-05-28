@@ -22,20 +22,19 @@ class VKApi:
         """
         data = self._make_request(f"photos.getAlbums?owner_id={owner_id}")
 
-        try:
-            data["response"]
-        except KeyError:
-            return "Введен неверный ID"
+        if "response" not in data:
+            return "Произошла ошибка при запросе альбомов"
 
         output = f"Фотоальбомы пользователя c ID: {owner_id}\n\n"
         for album in data["response"]["items"]:
             output += f"{album["title"]}\nОписание: {album["description"]}\n\n"
+        output = output[:-2]
         return output
 
     def _make_request(self, request_endpoint: str) -> dict:
         endpoint = f"{self.api_endpoint}/{request_endpoint}&access_token={
             self.access_token}&v={self.version}"
-        response = requests.get(endpoint, timeout=1)
+        response = requests.get(endpoint, timeout=10)
         data = response.json()
         return data
 
