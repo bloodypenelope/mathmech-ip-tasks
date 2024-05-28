@@ -45,7 +45,7 @@ def main():
         token, version = data["token"], data["version"]
 
     api = VKApi(token, version)
-    print(api.get_photo_albums(56719936))
+    print(api.get_photo_albums(112660218))
 
 
 if __name__ == "__main__":
